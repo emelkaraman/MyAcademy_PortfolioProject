@@ -30,7 +30,6 @@
     <Folder Include="ViewComponents\AdminViewComponenets\" />
     <Folder Include="ViewComponents\StatisticsViewComponents\" />
     <Folder Include="Views\Default\" />
-    <Folder Include="Views\Shared\Components\" />
   </ItemGroup>
 
 </Project>
