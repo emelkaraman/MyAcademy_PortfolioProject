@@ -1,11 +1,21 @@
 ﻿@model MyAcademy_PortfolioProject.Entities.Experience
+
 @{
     ViewData["Title"] = "Deneyim Güncelle";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
 
-    var workTypes = new List<string> { "Tam Zamanlı", "Yarı Zamanlı", "Staj", "Freelance", "Uzaktan", "Hibrit" };
-    // Kayıtlı değer listede yoksa kaybolmasın diye ekle
-    if (!string.IsNullOrWhiteSpace(Model?.WorkType) && !workTypes.Contains(Model.WorkType))
+    var workTypes = new List<string>
+    {
+        "Tam Zamanlı",
+        "Yarı Zamanlı",
+        "Staj",
+        "Freelance",
+        "Uzaktan",
+        "Hibrit"
+    };
+
+    if (!string.IsNullOrWhiteSpace(Model?.WorkType) &&
+        !workTypes.Contains(Model.WorkType))
     {
         workTypes.Insert(0, Model.WorkType);
     }
@@ -147,67 +157,104 @@
 }
 
 <div class="form-card">
-    <form asp-area="Admin" asp-action="UpdateExperience" method="post">
+    <form asp-area="Admin"
+          asp-controller="Experience"
+          asp-action="UpdateExperience"
+          method="post">
+
         <input type="hidden" asp-for="ExperienceID" />
 
         <div class="form-card-header">
-            <div class="form-card-icon"><i class="bi bi-briefcase"></i></div>
+            <div class="form-card-icon">
+                <i class="bi bi-briefcase"></i>
+            </div>
             <div>
                 <h5 class="mb-0 fw-bold">Deneyimi Güncelle</h5>
-                <small class="text-secondary">Mevcut deneyim bilgilerini düzenleyip kaydedin.</small>
+                <small class="text-secondary">
+                    Mevcut deneyim bilgilerini düzenleyip kaydedin.
+                </small>
             </div>
         </div>
 
         <div class="form-card-body">
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger mb-3"></div>
 
             <div class="row g-4">
+
                 <!-- Pozisyon -->
                 <div class="col-md-6">
-                    <label asp-for="Title" class="form-label">Pozisyon / Ünvan <span class="req">*</span></label>
+                    <label asp-for="Title" class="form-label">
+                        Pozisyon / Ünvan <span class="req">*</span>
+                    </label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-person-badge"></i>
-                        <input asp-for="Title" class="form-control" placeholder="Örn: Senior Software Engineer" required />
+                        <input asp-for="Title"
+                               class="form-control"
+                               placeholder="Örn: Senior Software Engineer"
+                               required />
                     </div>
-                    <span asp-validation-for="Title"></span>
+                    <span asp-validation-for="Title"
+                          class="text-danger"></span>
                 </div>
 
                 <!-- Şirket -->
                 <div class="col-md-6">
-                    <label asp-for="CompanyName" class="form-label">Şirket Adı <span class="req">*</span></label>
+                    <label asp-for="CompanyName" class="form-label">
+                        Şirket Adı <span class="req">*</span>
+                    </label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-building"></i>
-                        <input asp-for="CompanyName" class="form-control" placeholder="Örn: NovaTech Solutions" required />
+                        <input asp-for="CompanyName"
+                               class="form-control"
+                               placeholder="Örn: NovaTech Solutions"
+                               required />
                     </div>
-                    <span asp-validation-for="CompanyName"></span>
+                    <span asp-validation-for="CompanyName"
+                          class="text-danger"></span>
                 </div>
 
                 <!-- Alt Başlık -->
                 <div class="col-md-6">
-                    <label asp-for="SideTitle" class="form-label">Alt Başlık</label>
+                    <label asp-for="SideTitle" class="form-label">
+                        Alt Başlık
+                    </label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-geo-alt"></i>
-                        <input asp-for="SideTitle" class="form-control" placeholder="Örn: İstanbul / Hibrit" />
+                        <input asp-for="SideTitle"
+                               class="form-control"
+                               placeholder="Örn: İstanbul / Hibrit" />
                     </div>
-                    <span asp-validation-for="SideTitle"></span>
+                    <span asp-validation-for="SideTitle"
+                          class="text-danger"></span>
                 </div>
 
                 <!-- Süre -->
                 <div class="col-md-6">
-                    <label asp-for="Duration" class="form-label">Süre / Tarih Aralığı <span class="req">*</span></label>
+                    <label asp-for="Duration" class="form-label">
+                        Süre / Tarih Aralığı <span class="req">*</span>
+                    </label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-calendar3"></i>
-                        <input asp-for="Duration" class="form-control" placeholder="Örn: Ocak 2025 - Devam Ediyor" required />
+                        <input asp-for="Duration"
+                               class="form-control"
+                               placeholder="Örn: Ocak 2025 - Devam Ediyor"
+                               required />
                     </div>
-                    <span asp-validation-for="Duration"></span>
+                    <span asp-validation-for="Duration"
+                          class="text-danger"></span>
                 </div>
 
                 <!-- Çalışma Tipi -->
                 <div class="col-md-6">
-                    <label asp-for="WorkType" class="form-label">Çalışma Tipi <span class="req">*</span></label>
+                    <label asp-for="WorkType" class="form-label">
+                        Çalışma Tipi <span class="req">*</span>
+                    </label>
                     <div class="input-icon-wrap">
                         <i class="bi bi-clock-history"></i>
-                        <select asp-for="WorkType" class="form-select" required>
+                        <select asp-for="WorkType"
+                                class="form-select"
+                                required>
                             <option value="">Seçiniz...</option>
                             @foreach (var type in workTypes)
                             {
@@ -215,7 +262,8 @@
                             }
                         </select>
                     </div>
-                    <span asp-validation-for="WorkType"></span>
+                    <span asp-validation-for="WorkType"
+                          class="text-danger"></span>
                 </div>
 
                 <!-- Durum -->
@@ -223,34 +271,53 @@
                     <label class="form-label">Durum</label>
                     <div class="status-box">
                         <div>
-                            <div class="fw-semibold" style="font-size: 0.86rem;">Halen burada çalışıyorum</div>
-                            <small class="text-secondary">Aktif ise portfolyoda "Devam Ediyor" olarak görünür.</small>
+                            <div class="fw-semibold"
+                                 style="font-size: 0.86rem;">
+                                Portfolyoda Göster
+                            </div>
+                            <small class="text-secondary">
+                                Aktif olduğunda deneyim portfolyoda gösterilebilir.
+                            </small>
                         </div>
                         <div class="form-check form-switch m-0">
-                            <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" />
+                            <input asp-for="IsActive"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   role="switch" />
                         </div>
                     </div>
                 </div>
 
                 <!-- Açıklama -->
                 <div class="col-12">
-                    <label asp-for="Description" class="form-label">Açıklama <span class="req">*</span></label>
-                    <textarea asp-for="Description" class="form-control" rows="5"
-                              placeholder="Bu pozisyonda üstlendiğiniz görevleri ve sorumlulukları yazın..." required></textarea>
-                    <span asp-validation-for="Description"></span>
+                    <label asp-for="Description" class="form-label">
+                        Açıklama <span class="req">*</span>
+                    </label>
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="5"
+                              placeholder="Bu pozisyonda üstlendiğiniz görevleri ve sorumlulukları yazın..."
+                              required></textarea>
+                    <span asp-validation-for="Description"
+                          class="text-danger"></span>
                 </div>
+
             </div>
         </div>
 
         <div class="form-card-footer">
-            <a asp-area="Admin" asp-action="Index" class="btn btn-soft">
-                <i class="bi bi-arrow-left me-1"></i> Vazgeç
+            <a asp-area="Admin"
+               asp-controller="Experience"
+               asp-action="ExperienceList"
+               class="btn btn-soft">
+                <i class="bi bi-arrow-left me-1"></i>
+                Vazgeç
             </a>
+
             <button type="submit" class="btn btn-accent">
-                <i class="bi bi-check2-circle me-1"></i> Değişiklikleri Kaydet
+                <i class="bi bi-check2-circle me-1"></i>
+                Değişiklikleri Kaydet
             </button>
         </div>
     </form>
 </div>
-
-

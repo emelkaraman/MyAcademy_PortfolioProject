@@ -27,7 +27,11 @@
                 <td>@item.SideTitle</td>
                 <td>@item.Duration</td>
                 <td>@item.IsActive</td>
-                <td><a href="/Admin/Experience/DeleteExperience/@item.ExperienceID" class="btn btn-danger">Sil</a></td>
+                
+                    <td> 
+                    <form method="post" asp-action="DeleteExperience" asp-route-id="@item.ExperienceID"><button type="submit" class="btn btn-danger">Sil</button></form>
+                            </td>
+                
                 <td><a href="/Admin/Experience/UpdateExperience/@item.ExperienceID" class="btn btn-success">Güncelle</a></td>
             </tr>
         }

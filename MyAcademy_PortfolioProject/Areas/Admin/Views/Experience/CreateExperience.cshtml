@@ -1,34 +1,44 @@
 ﻿@model MyAcademy_PortfolioProject.Entities.Experience
+
 @{
     ViewData["Title"] = "CreateExperience";
-    Layout = Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
 }
 
-<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-
-
-<form method="post">
+<form asp-action="CreateExperience" method="post">
     <div class="container">
-        <br/>
-        <label>Başlık</label>
-        <input type="text" asp-for="Title" class="form-control"/>
         <br />
+
+        <label>Başlık</label>
+        <input type="text" asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+        <br />
+
         <label>Şirket Adı</label>
         <input type="text" asp-for="CompanyName" class="form-control" />
+        <span asp-validation-for="CompanyName" class="text-danger"></span>
         <br />
+
         <label>Açıklama</label>
         <input type="text" asp-for="Description" class="form-control" />
+        <span asp-validation-for="Description" class="text-danger"></span>
         <br />
+
         <label>Alt Başlık</label>
         <input type="text" asp-for="SideTitle" class="form-control" />
+        <span asp-validation-for="SideTitle" class="text-danger"></span>
         <br />
+
         <label>Çalışma Zamanı</label>
         <input type="text" asp-for="Duration" class="form-control" />
+        <span asp-validation-for="Duration" class="text-danger"></span>
         <br />
+
         <label>Çalışma Türü</label>
         <input type="text" asp-for="WorkType" class="form-control" />
+        <span asp-validation-for="WorkType" class="text-danger"></span>
         <br />
-        <button class="btn btn-info">Deneyimi Kaydet</button>
 
+        <button type="submit" class="btn btn-info">Deneyimi Kaydet</button>
     </div>
 </form>

@@ -28,18 +28,33 @@ namespace MyAcademy_PortfolioProject.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult CreateExperience(Experience experience)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(experience);
+            }
+
             _context.Experiences.Add(experience);
             _context.SaveChanges();
+
             return RedirectToAction("ExperienceList");
         }
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteExperience(int id)
         {
-            var value = _context.Experiences.Find(id);
-            _context.Experiences.Remove(value);
+            var experience = _context.Experiences.Find(id);
+
+            if (experience == null)
+            {
+                return NotFound();
+            }
+
+            _context.Experiences.Remove(experience);
             _context.SaveChanges();
+
             return RedirectToAction("ExperienceList");
         }
 
@@ -49,10 +64,17 @@ namespace MyAcademy_PortfolioProject.Areas.Admin.Controllers
             return View(value);
         }
         [HttpPost]
-        public  IActionResult UpdateExperience(Experience experience)
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateExperience(Experience experience)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(experience);
+            }
+
             _context.Experiences.Update(experience);
             _context.SaveChanges();
+
             return RedirectToAction("ExperienceList");
         }
     }

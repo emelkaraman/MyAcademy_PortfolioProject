@@ -10,7 +10,6 @@ builder.Services.AddDbContext<PortfolioContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<PortfolioContext>();
 
 var app = builder.Build();
 

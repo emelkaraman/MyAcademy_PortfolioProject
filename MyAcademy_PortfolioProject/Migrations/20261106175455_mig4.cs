@@ -10,9 +10,15 @@ namespace MyAcademy_PortfolioProject.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Projects_CategoryID",
-                table: "Projects");
+            migrationBuilder.Sql(@"
+        IF EXISTS (
+            SELECT 1
+            FROM sys.indexes
+            WHERE name = 'IX_Projects_CategoryID'
+              AND object_id = OBJECT_ID('dbo.Projects')
+        )
+        DROP INDEX [IX_Projects_CategoryID] ON [dbo].[Projects];
+    ");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_CategoryID",
