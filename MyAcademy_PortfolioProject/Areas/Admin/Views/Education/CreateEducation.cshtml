@@ -1,0 +1,95 @@
+﻿@model MyAcademy_PortfolioProject.Entities.Education
+
+@{
+    ViewData["Title"] = "Yeni Eğitim Ekle";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="container mt-4">
+    <h3>Yeni Eğitim Ekle</h3>
+    <hr />
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-area="Admin"
+                  asp-controller="Education"
+                  asp-action="CreateEducation"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">
+                        Eğitim Başlığı
+                    </label>
+                    <input asp-for="Title"
+                           class="form-control"
+                           placeholder="Örn: Bilgisayar Mühendisliği" />
+                    <span asp-validation-for="Title"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SubTitle" class="form-label">
+                        Alt Başlık
+                    </label>
+                    <input asp-for="SubTitle"
+                           class="form-control"
+                           placeholder="Örn: Üniversite / Kurum adı" />
+                    <span asp-validation-for="SubTitle"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">
+                        Açıklama
+                    </label>
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Eğitim hakkında açıklama"></textarea>
+                    <span asp-validation-for="Description"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Duration" class="form-label">
+                        Eğitim Süresi
+                    </label>
+                    <input asp-for="Duration"
+                           class="form-control"
+                           placeholder="Örn: 2019 - 2023" />
+                    <span asp-validation-for="Duration"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsActive"
+                           class="form-check-input" />
+                    <label asp-for="IsActive"
+                           class="form-check-label">
+                        Aktif
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Eğitimi Kaydet
+                </button>
+
+                <a asp-area="Admin"
+                   asp-controller="Education"
+                   asp-action="EducationList"
+                   class="btn btn-secondary">
+                    İptal
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+

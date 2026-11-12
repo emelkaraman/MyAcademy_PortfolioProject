@@ -1,0 +1,70 @@
+﻿@model MyAcademy_PortfolioProject.Entities.HeroSection
+
+@{
+    ViewData["Title"] = "Giriş Bilgisi Ekle";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="container mt-4">
+    <h4>Giriş Bilgisi Ekle</h4>
+    <hr />
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-area="Admin"
+                  asp-controller="HeroSection"
+                  asp-action="CreateHeroSection"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Başlık</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Subtitle" class="form-label">Alt Başlık</label>
+                    <input asp-for="Subtitle" class="form-control" />
+                    <span asp-validation-for="Subtitle" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Açıklama</label>
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ImageUrl" class="form-label">Görsel URL</label>
+                    <input asp-for="ImageUrl" class="form-control" />
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label">
+                        Aktif
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Kaydet
+                </button>
+
+                <a asp-action="HeroSectionList"
+                   class="btn btn-secondary">
+                    İptal
+                </a>
+
+            </form>
+        </div>
+    </div>
+</div>

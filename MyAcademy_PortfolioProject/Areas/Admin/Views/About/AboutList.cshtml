@@ -1,0 +1,70 @@
+﻿@model List<MyAcademy_PortfolioProject.Entities.About>
+
+@{
+    ViewData["Title"] = "Hakkımda Bilgileri";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Hakkımda Bilgileri</h4>
+
+        @if (Model.Count == 0)
+        {
+            <a asp-area="Admin"
+               asp-controller="About"
+               asp-action="CreateAbout"
+               class="btn btn-success">
+                + Hakkımda Bilgisi Ekle
+            </a>
+        }
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Ad Soyad</th>
+                <th>Meslek</th>
+                <th>Konum</th>
+                <th>E-posta</th>
+                <th>Güncelle</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.NameSurname</td>
+                    <td>@item.JobTitle</td>
+                    <td>@item.Location</td>
+                    <td>@item.Email</td>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="About"
+                           asp-action="UpdateAbout"
+                           asp-route-id="@item.AboutID"
+                           class="btn btn-success btn-sm">
+                            Güncelle
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            Henüz Hakkımda bilgisi eklenmemiş.
+        </div>
+    }
+
+</div>

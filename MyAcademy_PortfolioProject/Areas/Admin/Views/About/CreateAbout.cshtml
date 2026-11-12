@@ -1,0 +1,79 @@
+﻿@model MyAcademy_PortfolioProject.Entities.About
+
+@{
+    ViewData["Title"] = "Hakkımda Ekle";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="container mt-4">
+    <h4>Hakkımda Bilgisi Ekle</h4>
+    <hr />
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-area="Admin"
+                  asp-controller="About"
+                  asp-action="CreateAbout"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="NameSurname" class="form-label">Ad Soyad</label>
+                    <input asp-for="NameSurname" class="form-control" />
+                    <span asp-validation-for="NameSurname" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="JobTitle" class="form-label">Meslek</label>
+                    <input asp-for="JobTitle" class="form-control" />
+                    <span asp-validation-for="JobTitle" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Location" class="form-label">Konum</label>
+                    <input asp-for="Location" class="form-control" />
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Expert" class="form-label">Uzmanlık Alanı</label>
+                    <input asp-for="Expert" class="form-control" />
+                    <span asp-validation-for="Expert" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">E-posta</label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Açıklama</label>
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="OpenToWork" class="form-label">Çalışma Durumu</label>
+                    <input asp-for="OpenToWork"
+                           class="form-control"
+                           placeholder="Örn: İş fırsatlarına açığım" />
+                    <span asp-validation-for="OpenToWork" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Kaydet</button>
+
+                <a asp-action="AboutList"
+                   class="btn btn-secondary">İptal</a>
+            </form>
+
+        </div>
+    </div>
+</div>

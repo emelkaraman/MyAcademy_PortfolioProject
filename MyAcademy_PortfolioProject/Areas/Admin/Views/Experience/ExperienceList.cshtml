@@ -4,38 +4,83 @@
     ViewData["Title"] = "ExperienceList";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
 }
+
 <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-<div class="container">
-    <br />
-    <table class="table table-bordered">
-        <tr>
-            <th>#</th>
-            <th>Başlık</th>
-            <th>Alt Başlık</th>
-            <th>Tarih</th>
-            <th>Durum</th>
-            <th>Sil</th>
-            <th>Güncelle</th>
-        </tr>
+<div class="container mt-4">
 
-        @foreach (var item in Model)
-        {
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Deneyim Listesi</h4>
+
+        <a asp-area="Admin"
+           asp-controller="Experience"
+           asp-action="CreateExperience"
+           class="btn btn-success">
+            + Yeni Deneyim Ekle
+        </a>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead>
             <tr>
-                <td>@item.ExperienceID</td>
-                <td>@item.Title</td>
-                <td>@item.SideTitle</td>
-                <td>@item.Duration</td>
-                <td>@item.IsActive</td>
-                
-                    <td> 
-                    <form method="post" asp-action="DeleteExperience" asp-route-id="@item.ExperienceID"><button type="submit" class="btn btn-danger">Sil</button></form>
-                            </td>
-                
-                <td><a href="/Admin/Experience/UpdateExperience/@item.ExperienceID" class="btn btn-success">Güncelle</a></td>
+                <th>#</th>
+                <th>Başlık</th>
+                <th>Alt Başlık</th>
+                <th>Tarih</th>
+                <th>Durum</th>
+                <th>Sil</th>
+                <th>Güncelle</th>
             </tr>
-        }
+        </thead>
 
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.ExperienceID</td>
+                    <td>@item.Title</td>
+                    <td>@item.SideTitle</td>
+                    <td>@item.Duration</td>
 
+                    <td>
+                        @if (item.IsActive)
+                        {
+                            <span class="badge bg-success">Aktif</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Pasif</span>
+                        }
+                    </td>
+
+                    <td>
+                        <form method="post"
+                              asp-area="Admin"
+                              asp-controller="Experience"
+                              asp-action="DeleteExperience"
+                              asp-route-id="@item.ExperienceID">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm">
+                                Sil
+                            </button>
+                        </form>
+                    </td>
+
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="Experience"
+                           asp-action="UpdateExperience"
+                           asp-route-id="@item.ExperienceID"
+                           class="btn btn-success btn-sm">
+                            Güncelle
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
+
 </div>

@@ -1,0 +1,84 @@
+﻿@model List<MyAcademy_PortfolioProject.Entities.Skill>
+
+@{
+    ViewData["Title"] = "Yetenek Listesi";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4>Yetenek Listesi</h4>
+
+        <a asp-area="Admin"
+           asp-controller="Skill"
+           asp-action="CreateSkill"
+           class="btn btn-success">
+            + Yeni Yetenek Ekle
+        </a>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Yetenek Adı</th>
+                <th>Seviye</th>
+                <th>Sil</th>
+                <th>Güncelle</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SkillID</td>
+                    <td>@item.SkillName</td>
+                    <td>
+                        <div class="progress" style="height: 22px;">
+                            <div class="progress-bar bg-success"
+                                 role="progressbar"
+                                 style="width: @(item.SkillLevel)%"
+                                 aria-valuenow="@item.SkillLevel"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                                @item.SkillLevel%
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <form asp-area="Admin"
+                              asp-controller="Skill"
+                              asp-action="DeleteSkill"
+                              asp-route-id="@item.SkillID"
+                              method="post">
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm">
+                                Sil
+                            </button>
+                        </form>
+                    </td>
+                    <td>
+                        <a asp-area="Admin"
+                           asp-controller="Skill"
+                           asp-action="UpdateSkill"
+                           asp-route-id="@item.SkillID"
+                           class="btn btn-success btn-sm">
+                            Güncelle
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            Henüz yetenek eklenmemiş.
+        </div>
+    }
+
+</div>

@@ -61,8 +61,14 @@ namespace MyAcademy_PortfolioProject.Areas.Admin.Controllers
         public IActionResult UpdateExperience(int id)
         {
             var value = _context.Experiences.Find(id);
+            if(value == null)
+            {
+                return NotFound();
+            }
             return View(value);
         }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult UpdateExperience(Experience experience)

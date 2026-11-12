@@ -1,0 +1,97 @@
+﻿@model MyAcademy_PortfolioProject.Entities.Contact
+
+@{
+    ViewData["Title"] = "İletişim Bilgisi Güncelle";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="container mt-4">
+    <h4>İletişim Bilgilerini Güncelle</h4>
+    <hr />
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-area="Admin"
+                  asp-controller="Contact"
+                  asp-action="UpdateContact"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="ContactId" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">
+                        Açıklama
+                    </label>
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="4"></textarea>
+                    <span asp-validation-for="Description"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">
+                        E-posta
+                    </label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Linkedin" class="form-label">
+                        LinkedIn URL
+                    </label>
+                    <input asp-for="Linkedin" class="form-control" />
+                    <span asp-validation-for="Linkedin"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Locatioan" class="form-label">
+                        Konum
+                    </label>
+                    <input asp-for="Locatioan" class="form-control" />
+                    <span asp-validation-for="Locatioan"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Github" class="form-label">
+                        GitHub URL
+                    </label>
+                    <input asp-for="Github" class="form-control" />
+                    <span asp-validation-for="Github"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SubDescription" class="form-label">
+                        Alt Açıklama
+                    </label>
+                    <textarea asp-for="SubDescription"
+                              class="form-control"
+                              rows="3"></textarea>
+                    <span asp-validation-for="SubDescription"
+                          class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Güncelle
+                </button>
+
+                <a asp-action="ContactList"
+                   class="btn btn-secondary">
+                    İptal
+                </a>
+
+            </form>
+        </div>
+    </div>
+</div>
