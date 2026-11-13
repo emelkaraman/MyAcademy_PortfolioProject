@@ -8,7 +8,7 @@ namespace MyAcademy_PortfolioProject.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction(nameof(DefaultController.Index), "Default");
         }
 
         public IActionResult Privacy()

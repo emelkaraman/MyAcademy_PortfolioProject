@@ -1,39 +1,352 @@
-﻿@model List<MyAcademy_PortfolioProject.Entities.Message>
+@model List<MyAcademy_PortfolioProject.Entities.Message>
 
 @{
-    ViewData["Title"] = "MessageList";
+    ViewData["Title"] = "Gelen Mesajlar";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
 }
 
-<div class="container">
-    <br />
-    <table class="table table-bordered">
-        <tr>
-            <th>#</th>
-            <th>Gönderici</th>
-            <th>Email</th>
-            <th>Konu</th>
-            <th>Tarih</th>
-            <th>Mesajı Aç</th>
-            <th>Mesajı Sil</th>
+<div class="container mt-4">
 
-        </tr>
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.MessageID</td>
-                <td>@item.NameSurname</td>
-                <td>@item.Email</td>
-                <td>@item.Subject</td>
-                <td>@item.SendDate.ToString("dd MMM yyyy")</td>
-                <td><a href="/Admin/Message/MessageDetail/@item.MessageID" class="btn btn-primary">Mesajı Aç</a></td>
-                <td><a href="/Admin/Message/DeleteMessage/@item.MessageID" class="btn btn-danger">Mesajı Sil</a></td>
-            </tr>
-        }
+        <span id="unreadCounter" class="badge bg-primary fs-6">
+            Okunmamış: @ViewBag.UnreadCount
+        </span>
+    </div>
 
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
 
-    </table>
+    <!-- Arama ve sıralama -->
+    <form asp-area="Admin"
+          asp-controller="Message"
+          asp-action="MessageList"
+          method="get"
+          class="row g-2 mb-4">
+
+        <div class="col-md-6">
+            <input type="text"
+                   name="search"
+                   value="@ViewBag.Search"
+                   class="form-control"
+                   placeholder="Gönderici veya konu ara..." />
+        </div>
+
+        <div class="col-md-3">
+            <select name="sort" class="form-select">
+                @if (ViewBag.Sort == "oldest")
+                {
+                    <option value="newest">En yeni</option>
+                    <option value="oldest" selected>En eski</option>
+                }
+                else
+                {
+                    <option value="newest" selected>En yeni</option>
+                    <option value="oldest">En eski</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search me-1"></i>
+                Ara
+            </button>
+
+            <a asp-area="Admin"
+               asp-controller="Message"
+               asp-action="MessageList"
+               class="btn btn-outline-secondary">
+                Temizle
+            </a>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Gönderici</th>
+                    <th>Email</th>
+                    <th>Konu</th>
+                    <th>Tarih</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="@(!item.IsRead ? "table-warning" : "")">
+
+                        <td>@item.MessageID</td>
+                        <td>@item.NameSurname</td>
+                        <td>@item.Email</td>
+                        <td>@item.Subject</td>
+                        <td>@item.SendDate.ToString("dd.MM.yyyy HH:mm")</td>
+
+                        <td class="status-cell">
+                            @if (item.IsRead)
+                            {
+                                <span class="badge bg-success">
+                                    Okundu
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    Okunmadı
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            <div class="d-flex gap-2 flex-wrap">
+
+                                <!-- Mesaj detayı -->
+                                <button type="button"
+                                        class="btn btn-primary btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#messageModal"
+                                        data-id="@item.MessageID"
+                                        data-name="@item.NameSurname"
+                                        data-email="@item.Email"
+                                        data-subject="@item.Subject"
+                                        data-message="@item.MessageDetail"
+                                        data-date="@item.SendDate.ToString("dd.MM.yyyy HH:mm")"
+                                        onclick="openMessage(this)">
+                                    Mesajı Aç
+                                </button>
+
+                                <!-- Okundu / okunmadı -->
+                                <form asp-area="Admin"
+                                      asp-controller="Message"
+                                      asp-action="ChangeReadStatus"
+                                      asp-route-id="@item.MessageID"
+                                      method="post"
+                                      class="status-form">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-secondary btn-sm">
+                                        @(item.IsRead
+                                            ? "Okunmadı Yap"
+                                            : "Okundu Yap")
+                                    </button>
+                                </form>
+
+                                <!-- Silme -->
+                                <form asp-area="Admin"
+                                      asp-controller="Message"
+                                      asp-action="DeleteMessage"
+                                      asp-route-id="@item.MessageID"
+                                      method="post"
+                                      class="delete-form">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm">
+                                        Mesajı Sil
+                                    </button>
+                                </form>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            @if (string.IsNullOrWhiteSpace(ViewBag.Search as string))
+            {
+                <span>Henüz mesaj bulunmuyor.</span>
+            }
+            else
+            {
+                <span>Aramanıza uygun mesaj bulunamadı.</span>
+            }
+        </div>
+    }
+
 </div>
 
+<!-- Bootstrap mesaj modalı -->
+<div class="modal fade"
+     id="messageModal"
+     tabindex="-1"
+     aria-labelledby="messageModalTitle"
+     aria-hidden="true">
 
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="messageModalTitle">
+                    Mesaj Detayı
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Kapat">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <p>
+                    <strong>Gönderen:</strong>
+                    <span id="modalName"></span>
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    <span id="modalEmail"></span>
+                </p>
+
+                <p>
+                    <strong>Konu:</strong>
+                    <span id="modalSubject"></span>
+                </p>
+
+                <p>
+                    <strong>Tarih:</strong>
+                    <span id="modalDate"></span>
+                </p>
+
+                <hr />
+
+                <div id="modalMessage"
+                     style="white-space: pre-wrap; overflow-wrap: anywhere;"></div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Kapat
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function openMessage(button) {
+
+            document.getElementById("modalName").textContent =
+                button.dataset.name;
+
+            document.getElementById("modalEmail").textContent =
+                button.dataset.email;
+
+            document.getElementById("modalSubject").textContent =
+                button.dataset.subject;
+
+            document.getElementById("modalDate").textContent =
+                button.dataset.date;
+
+            document.getElementById("modalMessage").textContent =
+                button.dataset.message;
+
+            const id = button.dataset.id;
+            const row = button.closest("tr");
+
+            const token = row.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            ).value;
+
+            const url = '@Url.Action("MarkAsRead", "Message", new { area = "Admin" })';
+
+            fetch(url + "?id=" + encodeURIComponent(id), {
+                method: "POST",
+                headers: {
+                    "RequestVerificationToken": token
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Mesaj durumu güncellenemedi.");
+                }
+
+                const badge = row.querySelector(".status-cell .badge");
+                const wasUnread =
+                    badge.textContent.trim() === "Okunmadı";
+
+                row.classList.remove("table-warning");
+
+                badge.textContent = "Okundu";
+                badge.className = "badge bg-success";
+
+                const statusButton = row.querySelector(
+                    ".status-form button"
+                );
+
+                if (statusButton) {
+                    statusButton.textContent = "Okunmadı Yap";
+                }
+
+                if (wasUnread) {
+                    const counter =
+                        document.getElementById("unreadCounter");
+
+                    const current = parseInt(
+                        counter.textContent.replace(/\D/g, ""),
+                        10
+                    );
+
+                    counter.textContent =
+                        "Okunmamış: " + Math.max(0, current - 1);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Hata",
+                    text: "Mesajın okundu durumu güncellenemedi."
+                });
+            });
+        }
+
+        // SweetAlert2 silme onayı
+        document.querySelectorAll(".delete-form").forEach(form => {
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: "Mesaj silinsin mi?",
+                    text: "Bu işlem geri alınamaz.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Evet, sil",
+                    cancelButtonText: "Vazgeç",
+                    confirmButtonColor: "#dc3545"
+                }).then(result => {
+
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+}

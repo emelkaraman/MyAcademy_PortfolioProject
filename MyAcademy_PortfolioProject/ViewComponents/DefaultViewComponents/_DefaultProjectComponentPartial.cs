@@ -14,7 +14,8 @@ namespace MyAcademy_PortfolioProject.ViewComponents.DefaultViewComponents
 
         public IViewComponentResult Invoke()
         {
-            var values = _context.Projects.Include(x => x.Category).ToList();
+            var values = _context.Projects.AsNoTracking().Where(x => x.IsActive)
+                .Include(x => x.Category).OrderByDescending(x => x.ProjectID).ToList();
             return View(values);
         }
 

@@ -1,7 +1,10 @@
-﻿<head>
+@model MyAcademy_PortfolioProject.Entities.Setting
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emel Nur Karaman | Bilgisayar Mühendisi & Full Stack Developer</title>
+    <title>@(Model?.SiteTitle ?? "Portfolyo")</title>
+    <meta name="description" content="@Model?.SiteDescription">
 
     <!-- Google Fonts: Plus Jakarta Sans & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

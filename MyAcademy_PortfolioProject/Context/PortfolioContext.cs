@@ -22,6 +22,7 @@ namespace MyAcademy_PortfolioProject.Context
         public DbSet<Skill> Skills { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
+        public DbSet<Setting> Settings { get; set; }
 
     }
 }

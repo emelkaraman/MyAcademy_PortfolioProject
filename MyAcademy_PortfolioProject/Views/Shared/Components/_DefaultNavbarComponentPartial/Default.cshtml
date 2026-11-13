@@ -1,4 +1,6 @@
-﻿<!-- Ambient Blobs -->
+@model string
+
+<!-- Ambient Blobs -->
 <div class="blob-bg blob-1"></div>
 <div class="blob-bg blob-2"></div>
 <div class="blob-bg blob-3"></div>
@@ -6,8 +8,8 @@
 <nav id="mainNavbar" class="navbar navbar-expand-lg fixed-top custom-navbar">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="#home">
-            <span class="brand-mark">P</span>
-            <span class="brand-name">Poyraz<span>.</span></span>
+            <span class="brand-mark">@Model[0]</span>
+            <span class="brand-name">@Model<span>.</span></span>
         </a>
 
         <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Menüyü Aç/Kapat">
@@ -37,10 +39,13 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#contact">İletişim</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin Paneli</a>
+                </li>
             </ul>
 
             <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
-                <a href="#contact" class="btn-custom-primary" id="btnDownloadCv">
+                <a asp-area="" asp-controller="Default" asp-action="DownloadCv" class="btn-custom-primary" id="btnDownloadCv">
                     <i class="bi bi-file-earmark-arrow-down"></i>
                     CV İndir
                 </a>

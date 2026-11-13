@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyAcademy_PortfolioProject.Context;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,31 @@ builder.Services.AddDbContext<PortfolioContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var delay))
+        {
+            context.HttpContext.Response.Headers.RetryAfter =
+                Math.Ceiling(delay.TotalSeconds).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+
+        await context.HttpContext.Response.WriteAsync(
+            "Çok fazla mesaj gönderme denemesi yapıldı. Lütfen birkaç dakika sonra tekrar deneyin.",
+            cancellationToken);
+    };
+    options.AddPolicy("contact", context => RateLimitPartition.GetSlidingWindowLimiter(
+        context.Connection.RemoteIpAddress?.MapToIPv6().ToString() ?? "unknown",
+        _ => new SlidingWindowRateLimiterOptions
+        {
+            PermitLimit = 5,
+            Window = TimeSpan.FromMinutes(5),
+            SegmentsPerWindow = 5,
+            QueueLimit = 0
+        }));
+});
 
 
 var app = builder.Build();
@@ -23,22 +49,20 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseRateLimiter();
 
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "areas",
-        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-});
+app.MapAreaControllerRoute(
+    name: "admin",
+    areaName: "Admin",
+    pattern: "Admin/{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Default}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

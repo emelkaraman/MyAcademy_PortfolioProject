@@ -1,4 +1,4 @@
-﻿@model List<MyAcademy_PortfolioProject.Entities.Project>
+@model List<MyAcademy_PortfolioProject.Entities.Project>
 
 <!-- Portfolio Projects Section -->
 <section id="projects">
@@ -12,24 +12,26 @@
         <!-- Category Filter Buttons -->
         <div class="d-flex justify-content-center flex-wrap gap-2 mb-5 reveal-on-scroll" id="projectFilterGroup">
             <button class="filter-btn active" data-filter="all">Tümü</button>
-            <button class="filter-btn" data-filter="web-app">Web Uygulamaları</button>
-            <button class="filter-btn" data-filter="dashboard">Dashboard</button>
-            <button class="filter-btn" data-filter="api-projects">API Projeleri</button>
+            @foreach (var category in Model.Select(project => project.Category).DistinctBy(category => category.CategoryID).OrderBy(category => category.CategoryName))
+            {
+                <button type="button" class="filter-btn" data-filter="@category.CategoryID">@category.CategoryName</button>
+            }
         </div>
 
         <!-- Project Cards Grid -->
         <div class="row g-4" id="projectGrid">
             @foreach (var item in Model)
             {
-                <div class="col-lg-4 col-md-6 project-item" data-category="web-app">
+                <div class="col-lg-4 col-md-6 project-item" data-category="@item.CategoryID">
                     <div class="project-card reveal-on-scroll">
 
                         <!-- Project Image -->
                         <div class="project-thumb"
                              style="width:100%; aspect-ratio:16/9; overflow:hidden;">
 
-                            <img src="@item.CoverImgUrl"
+                            <img src="@Url.Content(item.CoverImgUrl ?? "~/images/projects/code.jpg")"
                                  alt="@item.Title"
+                                 loading="lazy"
                                  style="width:100%;
                             height:100%;
                             object-fit:cover;
@@ -44,28 +46,14 @@
 
                             <p class="project-desc">@item.Description</p>
 
-                            <!-- Technologies -->
-                            <div class="mb-3">
-                                <span class="tech-tag">ASP.NET Core</span>
-                                <span class="tech-tag">EF Core</span>
-                                <span class="tech-tag">SQL Server</span>
-                                <span class="tech-tag">Bootstrap</span>
-                            </div>
-
-                            <!-- Project Links -->
-                            <div class="project-footer">
-                                <a href="@item.GithubUrl"
-                                   target="_blank"
-                                   rel="noopener noreferrer"
-                                   class="project-link-btn">
-                                    <i class="bi bi-github"></i> GitHub
-                                </a>
-
-                                <a href="#projects"
-                                   class="project-link-btn text-primary">
-                                    <i class="bi bi-box-arrow-up-right"></i> Canlı Demo
-                                </a>
-                            </div>
+                            @if (Uri.TryCreate(item.GithubUrl, UriKind.Absolute, out var repository) && repository.Scheme is "http" or "https")
+                            {
+                                <div class="project-footer">
+                                    <a href="@repository" target="_blank" rel="noopener noreferrer" class="project-link-btn">
+                                        <i class="bi bi-github" aria-hidden="true"></i> GitHub
+                                    </a>
+                                </div>
+                            }
                         </div>
 
                     </div>

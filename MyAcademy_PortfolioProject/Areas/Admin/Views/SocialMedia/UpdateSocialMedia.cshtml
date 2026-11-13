@@ -1,0 +1,72 @@
+@model MyAcademy_PortfolioProject.Entities.SocialMedia
+
+@{
+    ViewData["Title"] = "Sosyal Medya Güncelle";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="container mt-4">
+    <hr />
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-area="Admin"
+                  asp-controller="SocialMedia"
+                  asp-action="UpdateSocialMedia"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="SocialMediaID" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="PlatformName" class="form-label">
+                        Platform Adı
+                    </label>
+                    <input asp-for="PlatformName" class="form-control" />
+                    <span asp-validation-for="PlatformName"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Url" class="form-label">
+                        Bağlantı URL
+                    </label>
+                    <input asp-for="Url" class="form-control" />
+                    <span asp-validation-for="Url"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Icon" class="form-label">
+                        İkon Sınıfı
+                    </label>
+                    <input asp-for="Icon" class="form-control" />
+                    <span asp-validation-for="Icon"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label">
+                        Aktif
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Güncelle
+                </button>
+
+                <a asp-action="SocialMediaList"
+                   class="btn btn-secondary">
+                    İptal
+                </a>
+
+            </form>
+        </div>
+    </div>
+</div>

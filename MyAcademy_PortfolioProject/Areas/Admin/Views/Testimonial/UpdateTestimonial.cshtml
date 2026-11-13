@@ -1,0 +1,84 @@
+@model MyAcademy_PortfolioProject.Entities.Testimonial
+
+@{
+    ViewData["Title"] = "Referans Güncelle";
+    Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="container mt-4">
+    <hr />
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-area="Admin"
+                  asp-controller="Testimonial"
+                  asp-action="UpdateTestimonial"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" asp-for="TestimonialID" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="NameSurname" class="form-label">
+                        Ad Soyad
+                    </label>
+                    <input asp-for="NameSurname" class="form-control" />
+                    <span asp-validation-for="NameSurname"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="JobTitle" class="form-label">
+                        Meslek / Unvan
+                    </label>
+                    <input asp-for="JobTitle" class="form-control" />
+                    <span asp-validation-for="JobTitle"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Comment" class="form-label">
+                        Referans Yorumu
+                    </label>
+                    <textarea asp-for="Comment"
+                              class="form-control"
+                              rows="5"></textarea>
+                    <span asp-validation-for="Comment"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ImageUrl" class="form-label">
+                        Görsel URL
+                    </label>
+                    <input asp-for="ImageUrl" class="form-control" />
+                    <span asp-validation-for="ImageUrl"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label">
+                        Aktif
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Güncelle
+                </button>
+
+                <a asp-action="TestimonialList"
+                   class="btn btn-secondary">
+                    İptal
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>

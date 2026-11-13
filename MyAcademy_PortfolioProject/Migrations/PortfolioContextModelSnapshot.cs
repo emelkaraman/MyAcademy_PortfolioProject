@@ -317,6 +317,32 @@ namespace MyAcademy_PortfolioProject.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("MyAcademy_PortfolioProject.Entities.Setting", b =>
+                {
+                    b.Property<int>("SettingID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SettingID"));
+
+                    b.Property<string>("CvFilePath")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("SiteDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("SiteTitle")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("SettingID");
+
+                    b.ToTable("Settings");
+                });
+
             modelBuilder.Entity("MyAcademy_PortfolioProject.Entities.Skill", b =>
                 {
                     b.Property<int>("SkillID")

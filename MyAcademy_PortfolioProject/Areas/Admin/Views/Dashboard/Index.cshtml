@@ -1,10 +1,12 @@
-﻿@{
+@model MyAcademy_PortfolioProject.Models.DashboardViewModel
+
+@{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Areas/Admin/Views/AdminLayout/Index.cshtml";
 
-    int total = ViewBag.messageCount ?? 0;
-    int readCount = ViewBag.messageReadByTrueCount ?? 0;
-    int unreadCount = ViewBag.messageReadByFalseCount ?? 0;
+    int total = Model.TotalMessages;
+    int readCount = Model.ReadMessages;
+    int unreadCount = Model.UnreadMessages;
     int readPercent = total > 0 ? (int)Math.Round(readCount * 100.0 / total) : 0;
     int unreadPercent = total > 0 ? 100 - readPercent : 0;
 }
@@ -384,54 +386,70 @@
             }
 </style>
 
-<div class="dash">
+<style>
+    .dash .dash-main {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+    }
 
-    <!-- Başlık -->
+    .dash .dash-card {
+        min-width: 0;
+    }
+
+    .dash .dash-table a {
+        color: #4f46e5;
+        text-decoration: none;
+    }
+
+        .dash .dash-table a:hover {
+            text-decoration: underline;
+        }
+
+    .dash .category-track {
+        height: 9px;
+        background: #f3f4f6;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .dash .category-fill {
+        height: 100%;
+        background: #4f46e5;
+        border-radius: 20px;
+    }
+
+    .dash .dash-table .badge {
+        white-space: nowrap;
+    }
+
+    @@media (max-width: 640px) {
+        .dash .quick-links {
+            grid-template-columns: 1fr;
+        }
+
+        .dash .dash-card {
+            padding: 16px;
+        }
+    }
+</style>
+
+<div class="dash">
     <div class="dash-header">
         <div>
-            <h1>Dashboard</h1>
-            <p>Hoş geldiniz! Portfolyo sitenizin genel durumu aşağıda.</p>
+            <p>Portfolyo sitenizin güncel durumu</p>
         </div>
-        <a href="#" class="dash-btn">✉ Tüm Mesajlar</a>
+        <a asp-area="Admin" asp-controller="Message" asp-action="MessageList" class="dash-btn">✉ Tüm Mesajlar</a>
     </div>
 
-    <!-- İstatistik kartları -->
     <div class="dash-grid dash-stats">
-        <div class="dash-card stat">
-            <div class="stat-icon bg-indigo">✉</div>
-            <div>
-                <p class="stat-label">Toplam Mesaj</p>
-                <p class="stat-value">@total</p>
-                <div class="stat-sub">Tüm zamanlar</div>
-            </div>
-        </div>
-        <div class="dash-card stat">
-            <div class="stat-icon bg-green">✔</div>
-            <div>
-                <p class="stat-label">Okunmuş Mesaj</p>
-                <p class="stat-value">@readCount</p>
-                <div class="stat-sub">%@readPercent oranında</div>
-            </div>
-        </div>
-        <div class="dash-card stat">
-            <div class="stat-icon bg-amber">●</div>
-            <div>
-                <p class="stat-label">Okunmamış Mesaj</p>
-                <p class="stat-value">@unreadCount</p>
-                <div class="stat-sub">%@unreadPercent oranında</div>
-            </div>
-        </div>
-        <div class="dash-card stat">
-            <div class="stat-icon bg-sky">👁</div>
-            <div>
-                <p class="stat-label">Bu Ay Ziyaretçi</p>
-                <p class="stat-value">1.284</p>
-                <div class="stat-sub">Geçen aya göre +12%</div>
-            </div>
-        </div>
+        <div class="dash-card stat"><div class="stat-icon bg-indigo">📁</div><div><p class="stat-label">Toplam Proje</p><p class="stat-value">@Model.TotalProjects</p></div></div>
+        <div class="dash-card stat"><div class="stat-icon bg-green">✔</div><div><p class="stat-label">Aktif Proje</p><p class="stat-value">@Model.ActiveProjects</p></div></div>
+        <div class="dash-card stat"><div class="stat-icon bg-sky">🛠</div><div><p class="stat-label">Yetenekler</p><p class="stat-value">@Model.TotalSkills</p></div></div>
+        <div class="dash-card stat"><div class="stat-icon bg-indigo">💼</div><div><p class="stat-label">Deneyimler</p><p class="stat-value">@Model.TotalExperiences</p></div></div>
+        <div class="dash-card stat"><div class="stat-icon bg-sky">🎓</div><div><p class="stat-label">Eğitimler</p><p class="stat-value">@Model.TotalEducations</p></div></div>
+        <div class="dash-card stat"><div class="stat-icon bg-indigo">✉</div><div><p class="stat-label">Toplam Mesaj</p><p class="stat-value">@Model.TotalMessages</p></div></div>
+        <div class="dash-card stat"><div class="stat-icon bg-amber">●</div><div><p class="stat-label">Okunmamış Mesaj</p><p class="stat-value">@Model.UnreadMessages</p></div></div>
     </div>
 
-    <!-- Mesaj durumu + Grafik -->
     <div class="dash-grid dash-main">
         <div class="dash-card">
             <h3>Mesaj Durumu</h3>
@@ -444,15 +462,11 @@
                 <div class="progress-bar"><div class="progress-fill fill-amber" style="width:@(unreadPercent)%"></div></div>
             </div>
         </div>
-
         <div class="dash-card">
             <h3>Okunma Oranı</h3>
             <div class="donut-wrap">
-                <div class="donut" style="background: conic-gradient(#10b981 0 @(readPercent)%, #f59e0b @(readPercent)% 100%);">
-                    <div class="donut-inner">
-                        <strong>%@readPercent</strong>
-                        <small>okundu</small>
-                    </div>
+                <div class="donut" style="background:@(total == 0 ? "#e5e7eb" : $"conic-gradient(#10b981 0 {readPercent}%, #f59e0b {readPercent}% 100%)")">
+                    <div class="donut-inner"><strong>@(total == 0 ? "—" : $"%{readPercent}")</strong><small>@(total == 0 ? "mesaj yok" : "okundu")</small></div>
                 </div>
                 <ul class="legend">
                     <li><i style="background:#10b981"></i> Okunmuş (@readCount)</li>
@@ -463,80 +477,96 @@
         </div>
     </div>
 
-    <!-- Hızlı mesaj listesi (statik) -->
     <div class="dash-card" style="margin-bottom:20px;">
-        <h3>Son Mesajlar <a href="#">Tümünü gör →</a></h3>
+        <h3>Son 5 Mesaj <a asp-area="Admin" asp-controller="Message" asp-action="MessageList">Tümünü gör</a></h3>
         <div class="table-scroll">
             <table class="dash-table">
-                <thead>
-                    <tr>
-                        <th>Gönderen</th>
-                        <th>Konu</th>
-                        <th>Tarih</th>
-                        <th>Durum</th>
-                    </tr>
-                </thead>
+                <thead><tr><th>Gönderen</th><th>Konu</th><th>Tarih</th><th>Durum</th><th>İşlem</th></tr></thead>
                 <tbody>
-                    <tr>
-                        <td><div class="name-cell"><span class="avatar">AY</span><div>Ahmet Yılmaz<div class="muted">ahmet@ornek.com</div></div></div></td>
-                        <td>Proje teklifi hakkında</td>
-                        <td class="muted">06.11.2026</td>
-                        <td><span class="badge badge-unread">Okunmadı</span></td>
+                    @foreach (var message in Model.RecentMessages)
+                    {
+                        <tr>
+                            <td><div class="name-cell"><span class="avatar">@(string.IsNullOrWhiteSpace(message.NameSurname) ? "?" : message.NameSurname.Substring(0, 1).ToUpper())</span><div>@message.NameSurname<div class="muted">@message.Email</div></div></div></td>
+                            <td>@message.Subject</td>
+                            <td class="muted">@message.SendDate.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>@if (message.IsRead) {
+                                <span class="badge badge-read">Okundu</span>
+                            } else
+                            {
+
+                                <span class="badge badge-unread">Okunmadı</span>
+                            }
+                        </td>
+                        <td><a asp-area="Admin" asp-controller="Message" asp-action="MessageList" asp-route-search="@message.NameSurname">Mesaja git</a></td>
                     </tr>
-                    <tr>
-                        <td><div class="name-cell"><span class="avatar">EK</span><div>Elif Kaya<div class="muted">elif@ornek.com</div></div></div></td>
-                        <td>Web sitesi tasarımı</td>
-                        <td class="muted">05.11.2026</td>
-                        <td><span class="badge badge-unread">Okunmadı</span></td>
-                    </tr>
-                    <tr>
-                        <td><div class="name-cell"><span class="avatar">MD</span><div>Mehmet Demir<div class="muted">mehmet@ornek.com</div></div></div></td>
-                        <td>İş birliği önerisi</td>
-                        <td class="muted">03.11.2026</td>
-                        <td><span class="badge badge-read">Okundu</span></td>
-                    </tr>
-                    <tr>
-                        <td><div class="name-cell"><span class="avatar">ZÇ</span><div>Zeynep Çelik<div class="muted">zeynep@ornek.com</div></div></div></td>
-                        <td>Teşekkür mesajı</td>
-                        <td class="muted">01.11.2026</td>
-                        <td><span class="badge badge-read">Okundu</span></td>
-                    </tr>
-                    <tr>
-                        <td><div class="name-cell"><span class="avatar">BA</span><div>Burak Aksoy<div class="muted">burak@ornek.com</div></div></div></td>
-                        <td>Freelance iş talebi</td>
-                        <td class="muted">29.10.2026</td>
-                        <td><span class="badge badge-read">Okundu</span></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                }
+                @if (!Model.RecentMessages.Any())
+                {
+                    <tr><td colspan="5" class="muted">Henüz mesaj bulunmuyor.</td></tr>
+                }
+            </tbody>
+        </table>
     </div>
-
-    <!-- Son aktiviteler + Hızlı erişim (statik) -->
-    <div class="dash-grid dash-main">
-        <div class="dash-card">
-            <h3>Son Aktiviteler</h3>
-            <ul class="activity">
-                <li><span class="dot" style="background:#4f46e5"></span><div>Yeni bir proje eklendi: <b>E-Ticaret Sitesi</b><span class="time">2 saat önce</span></div></li>
-                <li><span class="dot" style="background:#10b981"></span><div>Hakkımda bölümü güncellendi<span class="time">Dün</span></div></li>
-                <li><span class="dot" style="background:#f59e0b"></span><div>Yeni yetenek eklendi: <b>ASP.NET Core</b><span class="time">3 gün önce</span></div></li>
-                <li><span class="dot" style="background:#0284c7"></span><div>Deneyim bilgileri düzenlendi<span class="time">1 hafta önce</span></div></li>
-            </ul>
-        </div>
-
-        <div class="dash-card">
-            <h3>Hızlı Erişim</h3>
-            <div class="quick-links">
-                <a href="#">📁 Projeler</a>
-                <a href="#">🛠 Yetenekler</a>
-                <a href="#">💼 Deneyimler</a>
-                <a href="#">🎓 Eğitim</a>
-                <a href="#">👤 Hakkımda</a>
-                <a href="#">✉ Mesajlar</a>
-            </div>
-        </div>
-    </div>
-
 </div>
 
+<div class="dash-grid dash-main">
+    <div class="dash-card">
+        <h3>Son 3 Proje <a asp-area="Admin" asp-controller="Project" asp-action="ProjectList">Tümünü gör</a></h3>
+        <div class="table-scroll">
+            <table class="dash-table">
+                <thead><tr><th>Proje</th><th>Kategori</th><th>Durum</th><th>İşlem</th></tr></thead>
+                <tbody>
+                    @foreach (var project in Model.RecentProjects)
+                    {
+                        <tr>
+                            <td>@project.Title</td>
+                            <td>@(project.Category?.CategoryName ?? "Kategorisiz")</td>
+                            <td>@if (project.IsActive) {
+                                <span class="badge badge-read">Aktif</span>
+                            } else
+                            {
 
+                                <span class="badge badge-unread">Pasif</span>
+                            }
+                        </td>
+                        <td><a asp-area="Admin" asp-controller="Project" asp-action="UpdateProject" asp-route-id="@project.ProjectID">Düzenle</a></td>
+                    </tr>
+                }
+                @if (!Model.RecentProjects.Any())
+                {
+                    <tr><td colspan="4" class="muted">Henüz proje bulunmuyor.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="dash-card">
+    <h3>Kategori Bazında Projeler</h3>
+    @if (Model.ProjectsByCategory.Any())
+    {
+        @foreach (var category in Model.ProjectsByCategory.OrderByDescending(x => x.Value))
+        {
+            var percentage = Model.TotalProjects > 0 ? category.Value * 100.0 / Model.TotalProjects : 0;
+            <div class="progress-row">
+                <div class="progress-top"><span>@category.Key</span><span>@category.Value proje</span></div>
+                <div class="category-track"><div class="category-fill" style="width:@(percentage.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture))%"></div></div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="muted">Henüz kategorilere ait proje bulunmuyor.</p>
+    }
+</div>
+</div>
+
+<div class="dash-card">
+    <h3>Hızlı Erişim</h3>
+    <div class="quick-links">
+        <a asp-area="Admin" asp-controller="Project" asp-action="CreateProject">➕ Yeni Proje Ekle</a>
+        <a asp-area="Admin" asp-controller="Message" asp-action="MessageList">✉ Mesajları Gör</a>
+        <a asp-area="" asp-controller="Default" asp-action="Index">👁 Portfolyoyu Aç</a>
+        <a asp-area="Admin" asp-controller="Setting" asp-action="Index">⚙ Site Ayarları</a>
+    </div>
+</div>
+</div>
